@@ -256,6 +256,10 @@ public class Exposure {
             public static final TagKey<Item> FLASHES = TagKey.create(Registries.ITEM, Exposure.resource("flashes"));
             public static final TagKey<Item> LENSES = TagKey.create(Registries.ITEM, Exposure.resource("lenses"));
             public static final TagKey<Item> FILTERS = TagKey.create(Registries.ITEM, Exposure.resource("filters"));
+
+            public static final TagKey<Item> RED_FILTERS = TagKey.create(Registries.ITEM, Exposure.resource("red_filters"));
+            public static final TagKey<Item> GREEN_FILTERS = TagKey.create(Registries.ITEM, Exposure.resource("green_filters"));
+            public static final TagKey<Item> BLUE_FILTERS = TagKey.create(Registries.ITEM, Exposure.resource("blue_filters"));
         }
     }
 }
