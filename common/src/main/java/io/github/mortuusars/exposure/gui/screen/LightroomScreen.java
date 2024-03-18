@@ -60,7 +60,30 @@ public class LightroomScreen extends AbstractContainerScreen<LightroomMenu> {
         inventoryLabelY = 116;
 
         printButton = new ImageButton(leftPos + 117, topPos + 89, 22, 22, 176, 17,
-                22, MAIN_TEXTURE, 256, 256, this::onPrintButtonPressed, Component.empty());
+                22, MAIN_TEXTURE, 256, 256, this::onPrintButtonPressed, Component.empty()) {
+            @Override
+            public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+                if (Minecraft.getInstance().gameMode != null) {
+                    int buttonId = delta < 0 ? LightroomMenu.PREVIOUS_PROCESS_BUTTON_ID : LightroomMenu.NEXT_PROCESS_BUTTON_ID;
+                    Minecraft.getInstance().gameMode.handleInventoryButtonClick(getMenu().containerId, buttonId);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
+                    if (Minecraft.getInstance().gameMode != null)
+                        Minecraft.getInstance().gameMode.handleInventoryButtonClick(getMenu().containerId, LightroomMenu.NEXT_PROCESS_BUTTON_ID);
+                    this.playDownSound(Minecraft.getInstance().getSoundManager());
+                    this.onClick(mouseX, mouseY);
+                    return true;
+                }
+
+                return super.mouseClicked(mouseX, mouseY, button);
+            }
+        };
         printButton.setTooltip(Tooltip.create(Component.translatable("gui.exposure.lightroom.print")));
         addRenderableWidget(printButton);
     }
@@ -111,7 +134,7 @@ public class LightroomScreen extends AbstractContainerScreen<LightroomMenu> {
             int progress = getMenu().getData().get(LightroomBlockEntity.CONTAINER_DATA_PROGRESS_ID);
             int time = getMenu().getData().get(LightroomBlockEntity.CONTAINER_DATA_PRINT_TIME_ID);
             int width = progress != 0 && time != 0 ? progress * 24 / time : 0;
-            guiGraphics.blit(MAIN_TEXTURE, leftPos + 116, topPos + 91, 176, 0, width + 1, 17);
+            guiGraphics.blit(MAIN_TEXTURE, leftPos + 116, topPos + 91, 176, 0, width, 17);
         }
 
         ListTag frames = getMenu().getExposedFrames();
@@ -172,6 +195,8 @@ public class LightroomScreen extends AbstractContainerScreen<LightroomMenu> {
 
     @Override
     protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        updatePrintButtonTooltip(!getMenu().canPrintChromatic());
+
         super.renderTooltip(guiGraphics, mouseX, mouseY);
 
         boolean advancedTooltips = Minecraft.getInstance().options.advancedItemTooltips;
@@ -198,6 +223,33 @@ public class LightroomScreen extends AbstractContainerScreen<LightroomMenu> {
         }
 
         guiGraphics.renderTooltip(Minecraft.getInstance().font, tooltipLines, Optional.empty(), mouseX, mouseY);
+    }
+
+    private void updatePrintButtonTooltip(boolean clear) {
+        if (clear) {
+            printButton.setTooltip(Tooltip.create(Component.translatable("gui.exposure.lightroom.print")));
+            return;
+        }
+
+        MutableComponent component = Component.translatable("gui.exposure.lightroom.print")
+                .append("\n")
+                .append(Component.literal("Select Process:").withStyle(ChatFormatting.GRAY));
+
+        Lightroom.Process currentProcess = getMenu().getBlockEntity().getProcess();
+
+        for (Lightroom.Process pr : Lightroom.Process.values()) {
+            component.append("\n");
+            MutableComponent c = Component.literal(pr.name());
+
+            if (pr == currentProcess)
+                c.append(" <--").withStyle(ChatFormatting.GOLD);
+            else
+                c.withStyle(ChatFormatting.GRAY);
+
+            component.append(c);
+        }
+
+        printButton.setTooltip(Tooltip.create(component));
     }
 
     private void addFrameInfoToAdvancedTooltip(int frameIndex, List<Component> tooltipLines) {

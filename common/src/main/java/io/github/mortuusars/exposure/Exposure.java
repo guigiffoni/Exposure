@@ -127,6 +127,10 @@ public class Exposure {
                 () -> new PhotographItem(new Item.Properties()
                         .stacksTo(1)));
 
+        public static final Supplier<Item> CHROMATIC_FRAGMENT = Register.item("chromatic_fragment",
+                () -> new ChromaticFragmentItem(new Item.Properties()
+                        .stacksTo(1)));
+
         public static final Supplier<PhotographItem> AGED_PHOTOGRAPH = Register.item("aged_photograph",
                 () -> new PhotographItem(new Item.Properties()
                         .stacksTo(1)));
