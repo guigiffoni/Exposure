@@ -120,6 +120,9 @@ public class PhotographScreen extends ZoomableScreen {
             if (mouseX > width - 20 && mouseX < width && mouseY < 20) {
                 List<Component> lines = new ArrayList<>();
 
+                String exposureName = idOrTexture.map(id -> id, ResourceLocation::toString);
+                lines.add(Component.literal(exposureName));
+
                 lines.add(Component.translatable("gui.exposure.photograph_screen.drop_as_item_tooltip", Component.literal("CTRL + I")));
 
                 lines.add(idOrTexture.map(
@@ -136,11 +139,6 @@ public class PhotographScreen extends ZoomableScreen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return pager.handleKeyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (Screen.hasControlDown() && player != null && player.isCreative()) {
             ItemAndStack<PhotographItem> photograph = photographs.get(pager.getCurrentPage());
@@ -165,6 +163,11 @@ public class PhotographScreen extends ZoomableScreen {
             }
         }
 
+        return pager.handleKeyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         return pager.handleKeyReleased(keyCode, scanCode, modifiers) || super.keyReleased(keyCode, scanCode, modifiers);
     }
 
