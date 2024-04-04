@@ -12,6 +12,7 @@ import io.github.mortuusars.exposure.data.transfer.IExposureSender;
 import io.github.mortuusars.exposure.gui.screen.camera.ViewfinderControlsScreen;
 import io.github.mortuusars.exposure.item.AlbumItem;
 import io.github.mortuusars.exposure.item.CameraItemClientExtensions;
+import io.github.mortuusars.exposure.item.ChromaticSheetItem;
 import io.github.mortuusars.exposure.item.StackedPhotographsItem;
 import io.github.mortuusars.exposure.network.Packets;
 import io.github.mortuusars.exposure.render.ExposureRenderer;
@@ -41,6 +42,9 @@ public class ExposureClient {
         exposureReceiver = new ExposureReceiver(exposureStorage);
 
         ItemProperties.register(Exposure.Items.CAMERA.get(), new ResourceLocation("camera_state"), CameraItemClientExtensions::itemPropertyFunction);
+        ItemProperties.register(Exposure.Items.CHROMATIC_SHEET.get(), new ResourceLocation("channels"), (stack, clientLevel, livingEntity, seed) ->
+                stack.getItem() instanceof ChromaticSheetItem chromaticSheet ?
+                        chromaticSheet.getExposures(stack).size() / 10f : 0f);
         ItemProperties.register(Exposure.Items.STACKED_PHOTOGRAPHS.get(), new ResourceLocation("count"),
                 (stack, clientLevel, livingEntity, seed) ->
                         stack.getItem() instanceof StackedPhotographsItem stackedPhotographsItem ?
