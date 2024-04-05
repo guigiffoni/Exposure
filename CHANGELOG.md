@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fixed Chromatic Photograph not displaying correctly when trying to render it too quickly after printing (Usually when mouse was hovering over result slot).
+- Updated one localization file.
+
+---
+
 ## 1.5.0 - 2024-04-04
 - Added chromatic (trichrome) printing process
 - Red, Green and Blue filters now have stronger effect to enable chromatic process
