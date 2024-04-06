@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.5.1 - 2024-04-06
 
+- Added advancement for getting a Photograph create with Chromatic process.
 - Fixed Chromatic Photograph not displaying correctly when trying to render it too quickly after printing (Usually when mouse was hovering over result slot).
 - Updated one localization file.
 
